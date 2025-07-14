@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bookmark Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    input{
+      padding: 10px;
+      margin: 5px 0;
+      width: 30%;
+    }
+    button{
+        padding: 10px;
+      margin: 5px 0;
+      width: 32%;
+    }
+
+    #bookmarks a {
+      display: block;
+      margin: 5px 0;
+      color: rgb(0, 148, 202);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>My Bookmark Manager</h2>
+
+  <input type="text" id="siteName" placeholder="Website Name" />
+  <input type="text" id="siteURL" placeholder="Website URL (e.g., https://example.com)" />
+  <button onclick="addBookmark()">Add Bookmark</button>
+
+  <h3>Saved Bookmarks :</h3>
+  <div id="bookmarks"></div>
+
+  <script>
+    // Load existing bookmarks
+    window.onload = function() {
+      displayBookmarks();
+    };
+
+    function addBookmark() {
+      const name = document.getElementById("siteName").value.trim();
+      const url = document.getElementById("siteURL").value.trim();
+
+      if (!name || !url) {
+        alert("Please enter both name and URL.");
+        return;
+      }
+
+      // Create bookmark object
+      const bookmark = { name, url };
+
+      // Get existing from localStorage or create new array
+      let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      bookmarks.push(bookmark);
+
+      // Save back to localStorage
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+
+      // Reset fields and refresh display
+      document.getElementById("siteName").value = "";
+      document.getElementById("siteURL").value = "";
+      displayBookmarks();
+    }
+
+    function displayBookmarks() {
+      const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      const container = document.getElementById("bookmarks");
+      container.innerHTML = ""; // clear previous
+
+      bookmarks.forEach((bm, index) => {
+        const a = document.createElement("a");
+        a.href = bm.url;
+        a.textContent = bm.name;
+        a.target = "_blank"; // opens in new tab
+        container.appendChild(a);
+      });
+    }
+  </script>
+
+</body>
+</html>
